@@ -75,10 +75,10 @@ print("Question 1")
 
 def parcoursEnLargeurAvecDistance(mat, S):
     LF = [(S, 0)]  # liste de tuples (sommet, distance)
-    i = 0
-    while i < len(LF):
-        s, d = LF[i]
-        succ = [(successeur, d + 1) for successeur in successeurs(mat, s, [noeud[0] for noeud in LF])]
+    i = 0  
+    while i < len(LF): 
+        s, d = LF[i] 
+        succ = [(successeur, d + 1) for successeur in successeurs(mat, s, [elt[0] for elt in LF])] 
         LF += succ
         i += 1
     return LF
