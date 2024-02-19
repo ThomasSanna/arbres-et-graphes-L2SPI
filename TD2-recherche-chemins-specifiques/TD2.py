@@ -13,16 +13,16 @@ matrice = [
 
 def lireGraphe(mat):
   sommets = [f'S{i}' for i in range(len(mat))]
-  graphes = {sommet : [] for sommet in sommets}
+  listeAdjacence = {sommet : [] for sommet in sommets}
   for i in range(len(mat)):
     for j in range(len(mat)):
       if mat[i][j] == 1:
-        graphes[sommets[i]].append(sommets[j])
-  return sommets, graphes
+        listeAdjacence[sommets[i]].append(sommets[j])
+  return sommets, listeAdjacence
         
-sommets, graphes = lireGraphe(matrice)
+sommets, listeAdjacence = lireGraphe(matrice)
 print(sommets)
-print(graphes)
+print(listeAdjacence)
 
 # 2 ----------------------------------
 print("\nQuestion 2")
@@ -46,7 +46,7 @@ def ajouterArcs(mat, s, arcs):
       graphes[s].append(arc)
   return graphes
 
-print(ajouterArcs(matrice, 'S0', ['S1', 'S2']))
+print(ajouterArcs(matrice, 'S0', ['S1', 'S3']))
 
 # Partie 2
 print('\n----------- Partie 2 ----------------------------')
@@ -75,7 +75,6 @@ print(predecesseurs(matrice, "S1"))
   
 
 def parcoursEnLargeurAvecDistance(mat, S):
-  sommets, graphes = lireGraphe(mat)
   Ls = [(S, 0)]
   i=0
   while i < len(Ls):
@@ -89,17 +88,62 @@ print(parcoursEnLargeurAvecDistance(matrice, "S0"))
 # 1 ----------------------------------
 print("\nQuestion 1")
 
+# Renvoie la liste de sommets d'un chemin de D à A
 def chemin(mat, d, a):
-  sommets, graphes = lireGraphe(mat)
   Ls = [(d, [d])]
   i=0
   while i < len(Ls):
     s, c = Ls[i]
+    
     if s == a:
       return c
-    Ls += [(successeur, c+[successeur]) for successeur in successeurs(mat, s, [elt[0] for elt in Ls])]
-    print(Ls)
-    i+=1
+    
+    dejaFait = [elt[0] for elt in Ls]
+    
+    for successeur in successeurs(mat, s, dejaFait):
+      # [1, 2, 3] +  [4, 5] = [1, 2, 3, 4, 5]
+      Ls += [(successeur, c + [successeur])]
+      
+    i += 1
   return []
 
 print(chemin(matrice, 'S3', 'S2'))
+
+
+# Partie 3
+print('\n----------- Partie 3 ----------------------------')
+
+# 1 ----------------------------------
+print("Question 1")
+
+def cheminB(mat, d, a, ban):
+  Ls = [(d, [d])]
+  i=0
+  while i < len(Ls):
+    s, c = Ls[i]
+    
+    if s == a:
+      return c
+    
+    dejaFait = [elt[0] for elt in Ls]
+    
+    for successeur in successeurs(mat, s, dejaFait):
+      if successeur not in ban :
+        Ls +=[(successeur, c + [successeur])]
+    
+    i+=1
+  return []
+
+print(cheminB(matrice, 'S3', 'S2', ['S0', 'S1'])) # ne renvoie rien car on ne peut pas aller de S3 à S2 sans passer par S1
+
+# 2 ----------------------------------
+print("\nQuestion 2")
+
+def itineraire(mat, d, a, i):
+  sommets, _ = lireGraphe(mat)
+  chm1 = chemin(matrice, sommets[d], sommets[i])
+  chm2 = chemin(matrice, sommets[i], sommets[a])
+  
+  if chm2 != [] and chm1 != []:
+    chm = chm1 + chm2[1:-1]
+  
