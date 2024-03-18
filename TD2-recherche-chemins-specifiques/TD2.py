@@ -127,23 +127,43 @@ def cheminB(mat, d, a, ban):
     
     dejaFait = [elt[0] for elt in Ls]
     
-    for successeur in successeurs(mat, s, dejaFait):
-      if successeur not in ban :
-        Ls +=[(successeur, c + [successeur])]
+    for successeur in successeurs(mat, s, dejaFait + ban):
+      Ls += [(successeur, c + [successeur])]
     
     i+=1
   return []
 
-print(cheminB(matrice, 'S3', 'S2', ['S0', 'S1'])) # ne renvoie rien car on ne peut pas aller de S3 à S2 sans passer par S1
+print(cheminB(matrice, 'S3', 'S2', ['S1'])) # ne renvoie rien car on ne peut pas aller de S3 à S2 sans passer par S1
+print(cheminB(matrice, 'S3', 'S2', ['S0']))
 
 # 2 ----------------------------------
 print("\nQuestion 2")
 
 def itineraire(mat, d, a, i):
-  sommets, _ = lireGraphe(mat)
-  chm1 = chemin(matrice, sommets[d], sommets[i])
-  chm2 = chemin(matrice, sommets[i], sommets[a])
+  chm1 = chemin(mat, d, i)
+  chm2 = chemin(mat, i, a)
   
   if chm2 != [] and chm1 != []:
-    chm = chm1 + chm2[1:-1]
-  
+    chm = chm1 + chm2[1:]
+    return chm
+  return f'Aucun chemin trouvé de {d} à {a} en passant par {i}'
+
+print(itineraire(matrice, 'S0', 'S3', 'S2'))
+
+# 3 ----------------------------------
+print("\nQuestion 3")
+
+matrice2 = [
+    [0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 0, 1, 0, 1, 1, 0],
+    [0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 0] 
+]
+
+print(itineraire(matrice2, 'S0', 'S1', 'S9'))
