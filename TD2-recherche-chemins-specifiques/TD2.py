@@ -57,52 +57,24 @@ def successeurs(mat, S, LF):
 
 print(successeurs(matrice, 'S0', ['S1']))
 
-def predecesseursGraphe(mat):
-  sommets, _ = lireGraphe(mat)
-  graphe = {f"S{i}" : [] for i in range(len(mat))}
-  for i in range(len(mat)):
-    for j in range(len(mat)):
-      if mat[i][j] == 1:
-        graphe[sommets[j]].append(sommets[i])
-  return graphe
-        
-print(predecesseursGraphe(matrice))
-
-def predecesseurs(mat, S):
-  return predecesseursGraphe(mat)[S]
-
-print(predecesseurs(matrice, "S1"))
-  
-
-def parcoursEnLargeurAvecDistance(mat, S):
-  Ls = [(S, 0)]
-  i=0
-  while i < len(Ls):
-    s, d = Ls[i]
-    Ls += [(successeur, d+1) for successeur in successeurs(mat, s, [elt[0] for elt in Ls])]
-    i+=1
-  return Ls
-
-print(parcoursEnLargeurAvecDistance(matrice, "S0"))
-
 # 1 ----------------------------------
 print("\nQuestion 1")
 
 # Renvoie la liste de sommets d'un chemin de D à A
 def chemin(mat, d, a):
-  Ls = [(d, [d])]
+  ListeSommetChemin = [(d, [d])]
   i=0
-  while i < len(Ls):
-    s, c = Ls[i]
+  while i < len(ListeSommetChemin):
+    sommet, chemin = ListeSommetChemin[i]
     
-    if s == a:
-      return c
+    if sommet == a:
+      return chemin
     
     dejaFait = [elt[0] for elt in Ls]
     
-    for successeur in successeurs(mat, s, dejaFait):
+    for som in successeurs(mat, sommet, dejaFait):
       # [1, 2, 3] +  [4, 5] = [1, 2, 3, 4, 5]
-      Ls += [(successeur, c + [successeur])]
+      Ls += [(som, chemin + [som])]
       
     i += 1
   return []
@@ -117,18 +89,18 @@ print('\n----------- Partie 3 ----------------------------')
 print("Question 1")
 
 def cheminB(mat, d, a, ban):
-  Ls = [(d, [d])]
+  ListeSommetChemin = [(d, [d])]
   i=0
-  while i < len(Ls):
-    s, c = Ls[i]
+  while i < len(ListeSommetChemin):
+    sommet, chemin = ListeSommetChemin[i]
     
-    if s == a:
-      return c
+    if sommet == a:
+      return chemin
     
-    dejaFait = [elt[0] for elt in Ls]
+    dejaFait = [elt[0] for elt in ListeSommetChemin]
     
-    for successeur in successeurs(mat, s, dejaFait + ban):
-      Ls += [(successeur, c + [successeur])]
+    for successeur in successeurs(mat, sommet, dejaFait + ban):
+      ListeSommetChemin += [(successeur, chemin + [successeur])]
     
     i+=1
   return []
